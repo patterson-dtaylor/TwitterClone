@@ -75,4 +75,21 @@ class Utilities {
         
         return button
     }
+    
+    func pressedButtons(
+        withBackgroundColor backgroundColor: UIColor? = nil,
+        withTitle title: String,
+        withTitleColor titleColor: UIColor,
+        withFontSize fontSize: CGFloat,
+        withCornerRadius cornerRadius: CGFloat) -> UIButton {
+        
+            let button = UIButton(type: .system)
+            button.backgroundColor = backgroundColor
+            button.setTitle(title, for: .normal)
+            button.setTitleColor(titleColor, for: .normal)
+            button.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
+            button.layer.cornerRadius = cornerRadius
+            return button
+        
+    }
 }
