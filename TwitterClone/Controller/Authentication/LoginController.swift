@@ -42,12 +42,13 @@ class LoginController: UIViewController {
     }()
     
     private let loginButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.white
-        button.setTitle("Log In", for: .normal)
-        button.setTitleColor(UIColor(named: "twitterBlue"), for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 21)
-        button.layer.cornerRadius = 5
+        let button = Utilities().pressedButtons(
+            withBackgroundColor: UIColor.white,
+            withTitle: "Log In",
+            withTitleColor: UIColor(named: "twitterBlue")!,
+            withFontSize: 21,
+            withCornerRadius: 10
+        )
         button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -73,7 +74,8 @@ class LoginController: UIViewController {
     }
     
     @objc func handleShowSignUp() {
-        print("It's Working!!")
+        let controller = RegistrationController()
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     //MARK: - Helpers
@@ -91,7 +93,12 @@ class LoginController: UIViewController {
         stack.spacing = 30
         
         view.addSubview(stack)
-        stack.anchor(top: logoImageView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 65)
+        stack.anchor(
+            top: logoImageView.bottomAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            paddingTop: 65
+        )
         
         view.addSubview(loginButton)
         loginButton.anchor(
@@ -111,6 +118,7 @@ class LoginController: UIViewController {
             bottom: view.safeAreaLayoutGuide.bottomAnchor,
             right: view.rightAnchor,
             paddingLeft: 40,
+            paddingBottom: 20,
             paddingRight: 30,
             width: 228,
             height: 16
