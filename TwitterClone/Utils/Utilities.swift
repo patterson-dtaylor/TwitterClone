@@ -55,6 +55,7 @@ class Utilities {
         tf.textColor = .white
         tf.font = UIFont.systemFont(ofSize: 19)
         tf.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
+        tf.autocorrectionType = .no
         return tf
     }
     
