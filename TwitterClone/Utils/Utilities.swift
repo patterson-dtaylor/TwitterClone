@@ -93,4 +93,14 @@ class Utilities {
             return button
         
     }
+    
+    func tweetCellButtons (
+        withImageName imageName: String,
+        withcolorName colorName: String) -> UIButton {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: imageName), for: .normal)
+        button.tintColor = UIColor(named: colorName)
+        button.setDimensions(width: 20, height: 20)
+        return button
+    }
 }
