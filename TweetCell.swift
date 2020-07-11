@@ -9,7 +9,7 @@
 import UIKit
 
 protocol TweetCellDelegate: class {
-    func handleProfileImageTapped()
+    func handleProfileImageTapped(_ cell: TweetCell)
 }
 
 class TweetCell: UICollectionViewCell {
@@ -107,6 +107,7 @@ class TweetCell: UICollectionViewCell {
         )
         
         infoLabel.font = UIFont.systemFont(ofSize: 14)
+        infoLabel.text = "Ed Bighead @bighead • 10m"
         
         let underlineview = UIView()
         underlineview.backgroundColor = .systemGroupedBackground
@@ -149,7 +150,7 @@ class TweetCell: UICollectionViewCell {
     }
     
     @objc func handleProfileImageTapped() {
-        delegate?.handleProfileImageTapped()
+        delegate?.handleProfileImageTapped(self)
     }
     
     //MARK: - Helpers
@@ -160,7 +161,6 @@ class TweetCell: UICollectionViewCell {
         
         profileImageView.sd_setImage(with: viewModel.profileImageUrl, completed: nil)
         infoLabel.attributedText = viewModel.userInfoText
-//        infoLabel.text = "\(tweet.user.fullName) @\(tweet.user.username)  \(tweetTimestampFormatter(withTimestamp: tweet.timestamp))"
         captionLabel.text = tweet.caption
         
     }
