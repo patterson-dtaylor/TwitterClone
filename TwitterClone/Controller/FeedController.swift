@@ -81,7 +81,7 @@ class FeedController: UICollectionViewController {
  
 }
 
-//MARK: - Extentions
+//MARK: - UICollectionViewDelegate/Datasource
 
 extension FeedController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -95,6 +95,11 @@ extension FeedController {
         cell.tweet = tweets[indexPath.row]
         
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let controller = TweetController(tweet: tweets[indexPath.row])
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
 
