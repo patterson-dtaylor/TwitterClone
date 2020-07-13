@@ -14,7 +14,7 @@ class UploadTweetContoller: UIViewController {
     
     private let user: User
     
-    private let config: UpLoadTweeConfiguration
+    private let config: UpLoadTweetConfiguration
     
     private lazy var viewModel = UploadTweeViewModel(config: config)
     
@@ -59,7 +59,7 @@ class UploadTweetContoller: UIViewController {
     //MARK: - Lifecycle
     
     //Itializes the user so data can pass between controllers without recalling the api.
-    init(user: User, config: UpLoadTweeConfiguration) {
+    init(user: User, config: UpLoadTweetConfiguration) {
         self.user = user
         self.config = config
         super.init(nibName: nil, bundle: nil)
@@ -90,7 +90,7 @@ class UploadTweetContoller: UIViewController {
     
     @objc func sendTweetButtonPressed() {
         guard let tweet = captionTextView.text else { return }
-        TweetService.shared.uploadTweet(caption: tweet) { (error, ref) in
+        TweetService.shared.uploadTweet(caption: tweet, type: config) { (error, ref) in
             if let error = error {
                 print("DEBUG: Failed to upload tweet with error: \(error.localizedDescription)")
             }
