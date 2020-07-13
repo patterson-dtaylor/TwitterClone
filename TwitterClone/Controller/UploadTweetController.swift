@@ -14,6 +14,10 @@ class UploadTweetContoller: UIViewController {
     
     private let user: User
     
+    private let config: UpLoadTweeConfiguration
+    
+    private lazy var viewModel = UploadTweeViewModel(config: config)
+    
     private lazy var sendTweetButton: UIButton = {
         let button = UIButton(type: .system)
         button.backgroundColor = UIColor(named: "twitterBlue")
@@ -40,13 +44,24 @@ class UploadTweetContoller: UIViewController {
         return iv
     }()
     
+    private lazy var replyLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor(named: "twitterPlaceholderColor")
+        label.text = "Replying to @bighead"
+        label.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+        
+        return label
+    }()
+    
     private let captionTextView = CaptionTextView()
     
     //MARK: - Lifecycle
     
     //Itializes the user so data can pass between controllers without recalling the api.
-    init(user: User) {
+    init(user: User, config: UpLoadTweeConfiguration) {
         self.user = user
+        self.config = config
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -58,6 +73,13 @@ class UploadTweetContoller: UIViewController {
         super.viewDidLoad()
         
         configureUI()
+        
+        switch config {
+        case .tweet:
+            print("DEBUG: Config is tweet")
+        case .reply(let tweet):
+            print("DEBUG: Replying to \(tweet.caption)")
+        }
     }
     
     //MARK: - Selectors
@@ -85,8 +107,13 @@ class UploadTweetContoller: UIViewController {
         view.backgroundColor = UIColor(named: "twittercloneBG")
         configureNavigationBar()
         
-        let stack = UIStackView(arrangedSubviews: [profileImageView, captionTextView])
-        stack.axis = .horizontal
+        let imageCaptionStack = UIStackView(arrangedSubviews: [profileImageView, captionTextView])
+        imageCaptionStack.axis = .horizontal
+        imageCaptionStack.spacing = 12
+        imageCaptionStack.alignment = .leading
+        
+        let stack = UIStackView(arrangedSubviews: [replyLabel, imageCaptionStack])
+        stack.axis = .vertical
         stack.spacing = 12
         
         view.addSubview(stack)
@@ -100,6 +127,13 @@ class UploadTweetContoller: UIViewController {
         )
         
         profileImageView.sd_setImage(with: user.profileImageUrl, completed: nil)
+        
+        sendTweetButton.setTitle(viewModel.actionButtonTitle, for: .normal)
+        captionTextView.placeHolderLabel.text = viewModel.placeholderText
+        
+        replyLabel.isHidden = !viewModel.shouldShowReplyLabel
+        guard let replyText = viewModel.replyText else { return }
+        replyLabel.text = replyText
     }
     
     func configureNavigationBar() {
