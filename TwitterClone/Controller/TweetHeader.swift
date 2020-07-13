@@ -205,7 +205,7 @@ class TweetHeader: UICollectionReusableView {
         actionStack.axis = .horizontal
         actionStack.spacing = 72
         actionStack.centerX(inView: self)
-        actionStack.anchor(bottom: bottomAnchor, paddingBottom: 12)
+        actionStack.anchor(top: statsView.bottomAnchor, paddingTop: 16)
     }
     
     required init?(coder: NSCoder) {
