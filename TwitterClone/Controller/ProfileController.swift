@@ -15,7 +15,7 @@ class ProfileController: UICollectionViewController {
     
     //MARK: - Properties
     
-    private let user: User
+    private var user: User
     
     private var tweets = [Tweet]() {
         didSet { collectionView.reloadData() }
@@ -37,6 +37,7 @@ class ProfileController: UICollectionViewController {
         
         configureCollectionView()
         fetchTweets()
+        checkIfUserIsFollowed()
 
     }
     
@@ -53,6 +54,13 @@ class ProfileController: UICollectionViewController {
     func fetchTweets() {
         TweetService.shared.fetchTweets(forUser: user) { tweets in
             self.tweets = tweets
+        }
+    }
+    
+    func checkIfUserIsFollowed() {
+        UserService.shared.checkIfUserIsFollowed(uid: user.uid) { isFollowed in
+            self.user.isFollowed = isFollowed
+            self.collectionView.reloadData()
         }
     }
     
@@ -115,6 +123,37 @@ extension ProfileController: UICollectionViewDelegateFlowLayout {
 //MARK: - ProfileHeaderDelegate
 
 extension ProfileController: ProfileHeaderDelegate {
+    func handleFollowOrUnfollow(_ header: ProfileHeader) {
+        
+        if user.isCurrentUser {
+            print("DEBUG: Show edit profile controller")
+            return
+        }
+        
+        if user.isFollowed {
+            UserService.shared.unfollowUser(uid: user.uid) { (error, ref) in
+                self.user.isFollowed = false
+                self.collectionView.reloadData()
+                header.followOrUnfollowButton.layer.backgroundColor = UIColor.white.cgColor
+                header.followOrUnfollowButton.layer.borderColor = UIColor(named: "twitterBlue")?.cgColor
+                header.followOrUnfollowButton.layer.borderWidth = 1.25
+                header.followOrUnfollowButton.setTitleColor(UIColor(named: "twitterBlue"), for: .normal)
+            }
+        } else {
+            UserService.shared.followUser(uid: user.uid) { (ref, err) in
+                self.user.isFollowed = true
+                self.collectionView.reloadData()
+                header.followOrUnfollowButton.layer.backgroundColor = UIColor(named: "twitterBlue")?.cgColor
+                header.followOrUnfollowButton.layer.borderColor = UIColor(named: "twitterBlue")?.cgColor
+                header.followOrUnfollowButton.layer.borderWidth = 1.25
+                header.followOrUnfollowButton.setTitleColor(.white, for: .normal)
+            }
+        }
+        
+        
+        
+    }
+    
     func handleDismisal() {
         navigationController?.popViewController(animated: true)
     }

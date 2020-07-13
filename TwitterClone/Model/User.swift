@@ -15,6 +15,7 @@ struct User {
     let username: String
     let fullName: String
     let email: String
+    var isFollowed = false
     
     var isCurrentUser: Bool { return Auth.auth().currentUser?.uid == uid }
     

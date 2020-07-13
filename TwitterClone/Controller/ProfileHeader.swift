@@ -10,6 +10,7 @@ import UIKit
 
 protocol ProfileHeaderDelegate: class {
     func handleDismisal()
+    func handleFollowOrUnfollow(_ header: ProfileHeader)
 }
 
 class ProfileHeader: UICollectionReusableView {
@@ -63,7 +64,7 @@ class ProfileHeader: UICollectionReusableView {
         return iv
     }()
     
-    private lazy var followOrUnfollowButton: UIButton = {
+    lazy var followOrUnfollowButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Loading", for: .normal)
         button.layer.borderColor = UIColor(named: "twitterBlue")?.cgColor
@@ -210,7 +211,7 @@ class ProfileHeader: UICollectionReusableView {
     }
     
     @objc func handleFollowOrUnfollow() {
-        print("DEBUG: Follow or Unfollow.")
+        delegate?.handleFollowOrUnfollow(self)
     }
     
     @objc func handleFollowingTapped() {
