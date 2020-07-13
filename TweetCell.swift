@@ -10,6 +10,7 @@ import UIKit
 
 protocol TweetCellDelegate: class {
     func handleProfileImageTapped(_ cell: TweetCell)
+    func handleReplyTapped(_ cell: TweetCell)
 }
 
 class TweetCell: UICollectionViewCell {
@@ -120,11 +121,11 @@ class TweetCell: UICollectionViewCell {
         )
         
         let tweetCellButtonsStack = UIStackView(arrangedSubviews: [commentButton, retweetButton, likeButton, shareButton])
-        tweetCellButtonsStack.axis = .horizontal
-        tweetCellButtonsStack.distribution = .equalSpacing
-//        stack.spacing = 10
         addSubview(tweetCellButtonsStack)
-        tweetCellButtonsStack.anchor(left: profileImageView.rightAnchor, bottom: underlineview.topAnchor, right: rightAnchor, paddingLeft: 12, paddingRight: 50)
+        tweetCellButtonsStack.axis = .horizontal
+        tweetCellButtonsStack.spacing = 72
+        tweetCellButtonsStack.centerX(inView: self)
+        tweetCellButtonsStack.anchor(bottom: bottomAnchor, paddingBottom: 8)
     }
     
     required init?(coder: NSCoder) {
@@ -134,7 +135,7 @@ class TweetCell: UICollectionViewCell {
     //MARK: - Selectors
     
     @objc func commentButtonTapped() {
-        print("DEBUG: Comment button pressed!")
+        delegate?.handleReplyTapped(self)
     }
     
     @objc func retweetButtonTapped() {

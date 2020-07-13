@@ -13,6 +13,12 @@ class TweetHeader: UICollectionReusableView {
     
     //MARK: - Properties
     
+    var tweet: Tweet? {
+        didSet {
+            configure()
+        }
+    }
+    
     private lazy var profileImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
@@ -74,21 +80,9 @@ class TweetHeader: UICollectionReusableView {
         return button
     }()
     
-    private let retweetsLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.text = "3 Retweets"
-        
-        return label
-    }()
+    private let retweetsLabel = UILabel()
     
-    private let likesLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.text = "0 Likes"
-        
-        return label
-    }()
+    private let likesLabel = UILabel()
     
     private lazy var statsView: UIView = {
         let view = UIView()
@@ -123,6 +117,34 @@ class TweetHeader: UICollectionReusableView {
         )
         
         return view
+    }()
+    
+    private lazy var commentButton: UIButton = {
+        let button = createButton(withImage: "bubble.left")
+        button.addTarget(self, action: #selector(handleCommentTapped), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    private lazy var retweetButton: UIButton = {
+        let button = createButton(withImage: "repeat")
+        button.addTarget(self, action: #selector(handleRetweetTapped), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    private lazy var likeButton: UIButton = {
+        let button = createButton(withImage: "heart")
+        button.addTarget(self, action: #selector(handleLikeTapped), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    private lazy var shareButton: UIButton = {
+        let button = createButton(withImage: "square.and.arrow.up")
+        button.addTarget(self, action: #selector(handleShareTapped), for: .touchUpInside)
+        
+        return button
     }()
     
     //MARK: - Lifecycle
@@ -174,9 +196,16 @@ class TweetHeader: UICollectionReusableView {
             top: dateLabel.bottomAnchor,
             left: leftAnchor,
             right: rightAnchor,
-            paddingTop: 20,
+            paddingTop: 12,
             height: 40
         )
+        
+        let actionStack = UIStackView(arrangedSubviews: [commentButton, retweetButton, likeButton, shareButton])
+        addSubview(actionStack)
+        actionStack.axis = .horizontal
+        actionStack.spacing = 72
+        actionStack.centerX(inView: self)
+        actionStack.anchor(bottom: bottomAnchor, paddingBottom: 12)
     }
     
     required init?(coder: NSCoder) {
@@ -184,6 +213,30 @@ class TweetHeader: UICollectionReusableView {
     }
     
     //MARK: - Helpers
+    
+    func createButton(withImage imageName: String) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: imageName), for: .normal)
+        button.tintColor = UIColor(named: "twitterPlaceholderColor")
+        button.setDimensions(width: 20, height: 20)
+        
+        return button
+    }
+    
+    func configure() {
+        guard let tweet = tweet else { return }
+        
+        let viewModel = TweetViewModel(tweet: tweet)
+        
+        profileImageView.sd_setImage(with: viewModel.profileImageUrl)
+        fullNameLabel.text = tweet.user.fullName
+        usernameLabel.text = viewModel.usernameText
+        captionLabel.text = tweet.caption
+        dateLabel.text = viewModel.headerTimeStamp
+        retweetsLabel.attributedText = viewModel.retweetsAttributedString
+        likesLabel.attributedText = viewModel.likesAttributedString
+        
+    }
     
     //MARK: - Selectors
     
@@ -193,5 +246,21 @@ class TweetHeader: UICollectionReusableView {
     
     @objc func showActionSheet() {
         print("DEBUG: Show action sheet!")
+    }
+    
+    @objc func handleCommentTapped() {
+        print("DEBUG: Show comments!")
+    }
+    
+    @objc func handleRetweetTapped() {
+        print("DEBUG: Show retweets!")
+    }
+    
+    @objc func handleLikeTapped() {
+        print("DEBUG: Show likes!")
+    }
+    
+    @objc func handleShareTapped() {
+        print("DEBUG: Show share!")
     }
 }
