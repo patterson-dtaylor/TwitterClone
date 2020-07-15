@@ -10,7 +10,7 @@ import UIKit
 
 struct ActionSheetViewModel {
     
-    private let user: User
+    private var user: User
     
     var options: [ActionSheetOptions] {
         var results = [ActionSheetOptions]()
@@ -18,8 +18,14 @@ struct ActionSheetViewModel {
         if user.isCurrentUser {
             results.append(.delete)
         } else {
-            let followOption: ActionSheetOptions = user.isFollowed ? .unfollow(user) : .follow(user)
-            results.append(followOption)
+            if self.user.isFollowed {
+                results.append(.unfollow(self.user))
+            } else {
+                results.append(.follow(self.user))
+            }
+            
+//            let followOption: ActionSheetOptions = user.isFollowed ? .unfollow(user) : .follow(user)
+//            results.append(followOption)
         }
         
         results.append(.report)
@@ -31,7 +37,7 @@ struct ActionSheetViewModel {
         self.user = user
     }
 }
-
+    
 enum ActionSheetOptions {
     case follow(User)
     case unfollow(User)

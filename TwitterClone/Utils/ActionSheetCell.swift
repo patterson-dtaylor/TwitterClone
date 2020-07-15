@@ -12,7 +12,7 @@ class ActionSheetCell: UITableViewCell {
     
     //MARK: - Properties
     
-    var options: ActionSheetOptions? {
+    var option: ActionSheetOptions? {
         didSet {
             configure()
         }
@@ -58,6 +58,6 @@ class ActionSheetCell: UITableViewCell {
     //MARK: - Helper
     
     func configure() {
-        titleLabel.text = options?.description
+        titleLabel.text = option?.description
     }
 }
