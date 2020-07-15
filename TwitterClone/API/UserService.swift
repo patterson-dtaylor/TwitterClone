@@ -63,7 +63,6 @@ struct UserService {
         guard let currentUID = Auth.auth().currentUser?.uid else { return }
         
         REF_USER_FOLLOWING.child(currentUID).child(uid).observeSingleEvent(of: .value) { snapshot in
-            print("DEBUG: User is followed is \(snapshot.exists())")
             completion(snapshot.exists())
         }
     }

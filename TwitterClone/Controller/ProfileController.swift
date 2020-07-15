@@ -62,6 +62,7 @@ class ProfileController: UICollectionViewController {
         UserService.shared.checkIfUserIsFollowed(uid: user.uid) { isFollowed in
             self.user.isFollowed = isFollowed
             self.collectionView.reloadData()
+            print("DEBUG: User is following \(self.user.username): \(self.user.isFollowed)")
         }
     }
     
