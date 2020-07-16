@@ -45,6 +45,17 @@ class FeedController: UICollectionViewController {
     func fetchTweets() {
         TweetService.shared.fetchTweets { tweets in
             self.tweets = tweets
+            self.checkedIfUserLikedTweets(tweets)
+        }
+    }
+    
+    func checkedIfUserLikedTweets(_ tweets: [Tweet]) {
+        for (index, tweet) in tweets.enumerated() {
+            TweetService.shared.checkIfUserLikedTweet(tweet) { didLike in
+                guard didLike == true else { return }
+                
+                self.tweets[index].didLike = true
+            }
         }
     }
     
@@ -119,6 +130,18 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
 //MARK: - TweetCollection
 
 extension FeedController: TweetCellDelegate {
+    func handleLikeTapped(_ cell: TweetCell) {
+        guard let tweet = cell.tweet else { return }
+        
+        TweetService.shared.likeTweet(tweet: tweet) { (err, ref) in
+            cell.tweet?.didLike.toggle()
+            let likes = tweet.didLike ? tweet.likes - 1 : tweet.likes + 1
+            cell.tweet?.likes = likes
+
+        }
+        
+    }
+    
     func handleReplyTapped(_ cell: TweetCell) {
         guard let tweet = cell.tweet else { return }
         let controller = UploadTweetContoller(user: tweet.user, config: .reply(tweet))
