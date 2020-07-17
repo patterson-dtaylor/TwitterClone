@@ -143,20 +143,22 @@ extension ProfileController: ProfileHeaderDelegate {
         if user.isFollowed {
             UserService.shared.unfollowUser(uid: user.uid) { (error, ref) in
                 self.user.isFollowed = false
-                self.collectionView.reloadData()
                 header.followOrUnfollowButton.layer.backgroundColor = UIColor.white.cgColor
                 header.followOrUnfollowButton.layer.borderColor = UIColor(named: "twitterBlue")?.cgColor
                 header.followOrUnfollowButton.layer.borderWidth = 1.25
                 header.followOrUnfollowButton.setTitleColor(UIColor(named: "twitterBlue"), for: .normal)
+                self.collectionView.reloadData()
             }
         } else {
             UserService.shared.followUser(uid: user.uid) { (ref, err) in
                 self.user.isFollowed = true
-                self.collectionView.reloadData()
                 header.followOrUnfollowButton.layer.backgroundColor = UIColor(named: "twitterBlue")?.cgColor
                 header.followOrUnfollowButton.layer.borderColor = UIColor(named: "twitterBlue")?.cgColor
                 header.followOrUnfollowButton.layer.borderWidth = 1.25
                 header.followOrUnfollowButton.setTitleColor(.white, for: .normal)
+                self.collectionView.reloadData()
+                
+                NotificationService.shared.uploadNotification(type: .follow, user: self.user)
             }
         }
         

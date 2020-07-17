@@ -48,7 +48,6 @@ class UserCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-//        backgroundColor = .systemPurple
         
         addSubview(profileImageView)
         profileImageView.centerY(inview: self, leftAnchor: leftAnchor, paddingLeft: 12)
