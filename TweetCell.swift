@@ -42,6 +42,14 @@ class TweetCell: UICollectionViewCell {
     
     private let infoLabel = UILabel()
     
+    private let replyLabel: UILabel = {
+        let label = UILabel()
+        label.tintColor = UIColor(named: "twitterPlaceholderColor")
+        label.font = UIFont.systemFont(ofSize: 12)
+        
+        return label
+    }()
+    
     private let captionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
@@ -87,29 +95,31 @@ class TweetCell: UICollectionViewCell {
         
         backgroundColor = UIColor(named: "twittercloneBG")
         
-        addSubview(profileImageView)
-        profileImageView.anchor(
-            top: topAnchor,
-            left: leftAnchor,
-            paddingTop: 8,
-            paddingLeft: 8
-        )
+        let captionStack = UIStackView(arrangedSubviews: [infoLabel, captionLabel])
+        captionStack.axis = .vertical
+        captionStack.distribution = .fillProportionally
+        captionStack.spacing = 4
         
-        let stack = UIStackView(arrangedSubviews: [infoLabel, captionLabel])
+        let imageCaptionStack = UIStackView(arrangedSubviews: [profileImageView, captionStack])
+        imageCaptionStack.distribution = .fillProportionally
+        imageCaptionStack.spacing = 12
+        imageCaptionStack.alignment = .leading
+        
+        let stack = UIStackView(arrangedSubviews: [replyLabel, imageCaptionStack])
         stack.axis = .vertical
+        stack.spacing = 8
         stack.distribution = .fillProportionally
-        stack.spacing = 4
         addSubview(stack)
         stack.anchor(
-            top: profileImageView.topAnchor,
-            left: profileImageView.rightAnchor,
+            top: topAnchor,
+            left: leftAnchor,
             right: rightAnchor,
+            paddingTop: 4,
             paddingLeft: 12,
             paddingRight: 50
         )
         
         infoLabel.font = UIFont.systemFont(ofSize: 14)
-        infoLabel.text = "Ed Bighead @bighead • 10m"
         
         let underlineview = UIView()
         underlineview.backgroundColor = .systemGroupedBackground
@@ -167,6 +177,8 @@ class TweetCell: UICollectionViewCell {
         infoLabel.attributedText = viewModel.userInfoText
         likeButton.tintColor = viewModel.likeButtonTintColor
         likeButton.setImage(viewModel.likeButtonImage, for: .normal)
+        replyLabel.isHidden = viewModel.shouldHideReplyLabel
+        replyLabel.text = viewModel.replyText
         
     }
     

@@ -11,6 +11,7 @@ import UIKit
 protocol ProfileHeaderDelegate: class {
     func handleDismisal()
     func handleFollowOrUnfollow(_ header: ProfileHeader)
+    func didSelectFilter(filter: ProfileFilterOptions)
 }
 
 class ProfileHeader: UICollectionReusableView {
@@ -97,12 +98,6 @@ class ProfileHeader: UICollectionReusableView {
         label.text = "This is a user bio that will span more than one line for test purposes."
         
         return label
-    }()
-    
-    private let underlineView: UIView = {
-        let underlineview = UIView()
-        underlineview.backgroundColor = UIColor(named: "twitterBlue")
-        return underlineview
     }()
     
     private let followingLabel: UILabel = {
@@ -195,9 +190,6 @@ class ProfileHeader: UICollectionReusableView {
             right: rightAnchor,
             height: 50
         )
-        
-        addSubview(underlineView)
-        underlineView.anchor(left:leftAnchor, bottom: bottomAnchor, width: frame.width / 3, height: 2)
     }
     
     required init?(coder: NSCoder) {
@@ -243,12 +235,9 @@ class ProfileHeader: UICollectionReusableView {
 //MARK: - ProfileFilterViewDelegate
 
 extension ProfileHeader: ProfileFilterViewDelegate {
-    func filterView(_ view: ProfileFileterView, didSelect indexpath: IndexPath) {
-        guard let cell = view.collecitonView.cellForItem(at: indexpath) as? ProfileFilterCell else { return }
+    func filterView(_ view: ProfileFileterView, didSelect index: Int) {
+        guard let filter = ProfileFilterOptions(rawValue: index) else { return }
         
-        let xPosition = cell.frame.origin.x
-        UIView.animate(withDuration: 0.3) {
-            self.underlineView.frame.origin.x = xPosition
-        }
+        delegate?.didSelectFilter(filter: filter)
     }
 }
