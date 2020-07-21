@@ -19,6 +19,7 @@ let REF_TWEET_REPLIES = DB_REF.child("tweet-replies")
 let REF_USER_LIKES = DB_REF.child("user-likes")
 let REF_TWEET_LIKES = DB_REF.child("tweet-likes")
 let REF_NOTIFICATIONS = DB_REF.child("notifications")
+let REF_USER_REPLIES = DB_REF.child("user-replies")
 
 let STORAGE_REF = Storage.storage().reference()
 //Use underscores for storage names

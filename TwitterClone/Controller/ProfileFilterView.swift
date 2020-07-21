@@ -11,7 +11,7 @@ import UIKit
 private let reuseIdentifier = "ProfileFilterCell"
 
 protocol ProfileFilterViewDelegate: class {
-    func filterView(_ view: ProfileFileterView, didSelect indexpath: IndexPath)
+    func filterView(_ view: ProfileFileterView, didSelect indexpath: Int)
 }
 
 class ProfileFileterView: UIView {
@@ -29,6 +29,12 @@ class ProfileFileterView: UIView {
         return cv
     }()
     
+    private let underlineView: UIView = {
+        let underlineview = UIView()
+        underlineview.backgroundColor = UIColor(named: "twitterBlue")
+        return underlineview
+    }()
+    
     //MARK: - Lifecycle
     
     override init(frame: CGRect) {
@@ -41,6 +47,16 @@ class ProfileFileterView: UIView {
         addSubview(collecitonView)
         collecitonView.addConstrantsToFillView(self)
 
+    }
+    
+    override func layoutSubviews() {
+        addSubview(underlineView)
+        underlineView.anchor(
+            left:leftAnchor,
+            bottom: bottomAnchor,
+            width: frame.width / 3,
+            height: 2
+        )
     }
     
     required init?(coder: NSCoder) {
@@ -71,7 +87,14 @@ extension ProfileFileterView: UICollectionViewDataSource {
 
 extension ProfileFileterView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        delegate?.filterView(self, didSelect: indexPath)
+        let cell = collecitonView.cellForItem(at: indexPath)
+        
+        let xPosition = cell?.frame.origin.x ?? 0
+        UIView.animate(withDuration: 0.3) {
+            self.underlineView.frame.origin.x = xPosition
+        }
+        
+        delegate?.filterView(self, didSelect: indexPath.row)
     }
 }
 
